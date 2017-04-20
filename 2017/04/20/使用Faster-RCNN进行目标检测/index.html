@@ -1,0 +1,730 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="caffe," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="配置与运行Demo1.配置Faster rcnn1).将faster-rcnn项目clone到本地12# Make sure to clone with --recursivegit clone --recursive https://github.com/rbgirshick/py-faster-rcnn.git">
+<meta name="keywords" content="caffe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Faster-RCNN进行目标检测">
+<meta property="og:url" content="http://yoursite.com/2017/04/20/使用Faster-RCNN进行目标检测/index.html">
+<meta property="og:site_name" content="RlChen's Blog">
+<meta property="og:description" content="配置与运行Demo1.配置Faster rcnn1).将faster-rcnn项目clone到本地12# Make sure to clone with --recursivegit clone --recursive https://github.com/rbgirshick/py-faster-rcnn.git">
+<meta property="og:image" content="http://yoursite.com/images/pic_4_20_5.png">
+<meta property="og:image" content="http://yoursite.com/images/pic_4_20_6.png">
+<meta property="og:image" content="http://yoursite.com/images/pic_4_20_1.png">
+<meta property="og:image" content="http://yoursite.com/images/pic_4_20_4.png">
+<meta property="og:image" content="http://yoursite.com/images/pic_4_20_2.png">
+<meta property="og:image" content="http://yoursite.com/images/pic_4_20_3.png">
+<meta property="og:image" content="http://yoursite.com/images/prob1.png">
+<meta property="og:image" content="http://yoursite.com/images/prob2.png">
+<meta property="og:image" content="http://yoursite.com/images/prob3.png">
+<meta property="og:updated_time" content="2017-04-20T14:16:39.058Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Faster-RCNN进行目标检测">
+<meta name="twitter:description" content="配置与运行Demo1.配置Faster rcnn1).将faster-rcnn项目clone到本地12# Make sure to clone with --recursivegit clone --recursive https://github.com/rbgirshick/py-faster-rcnn.git">
+<meta name="twitter:image" content="http://yoursite.com/images/pic_4_20_5.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/20/使用Faster-RCNN进行目标检测/"/>
+
+
+
+
+
+  <title> 使用Faster-RCNN进行目标检测 | RlChen's Blog </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">RlChen's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/20/使用Faster-RCNN进行目标检测/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="rlchen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="RlChen's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="RlChen's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                使用Faster-RCNN进行目标检测
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-20T20:45:05+08:00">
+                2017-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/caffe-faster-rcnn/" itemprop="url" rel="index">
+                    <span itemprop="name">caffe faster-rcnn</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="配置与运行Demo"><a href="#配置与运行Demo" class="headerlink" title="配置与运行Demo"></a>配置与运行Demo</h2><h3 id="1-配置Faster-rcnn"><a href="#1-配置Faster-rcnn" class="headerlink" title="1.配置Faster rcnn"></a>1.配置Faster rcnn</h3><h4 id="1-将faster-rcnn项目clone到本地"><a href="#1-将faster-rcnn项目clone到本地" class="headerlink" title="1).将faster-rcnn项目clone到本地"></a>1).将faster-rcnn项目clone到本地</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># Make sure to clone with --recursive</div><div class="line">git clone --recursive https://github.com/rbgirshick/py-faster-rcnn.git</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<h4 id="2-编译Cpython-modules"><a href="#2-编译Cpython-modules" class="headerlink" title="2).编译Cpython modules"></a>2).编译Cpython modules</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd $FRCN_ROOT/lib</div><div class="line">make</div></pre></td></tr></table></figure>
+<h4 id="3-编译Caffe、pycaffe"><a href="#3-编译Caffe、pycaffe" class="headerlink" title="3).编译Caffe、pycaffe"></a>3).编译Caffe、pycaffe</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd $FRCN_ROOT/caffe-fast-rcnn</div><div class="line">make -j8 &amp;&amp; make pycaffe</div></pre></td></tr></table></figure>
+<p><strong>编译caffe时遇到的问题：</strong></p>
+<p><img src="/images/pic_4_20_5.png" align="center"></p>
+<p>这是因为当前版本的caffe的cudnn实现与系统所安装的cudnn的版本不一致引起的。<br>解决办法：<br>1.将 <font color="#FF8C00">py-faster-rcnn/caffe-fast-rcnn/include/caffe/util/cudnn.hpp</font><br>换成最新版的caffe里的cudnn的实现，即相应的cudnn.hpp，最新版caffe也就是你自己安装的caffe。<br>2.将 <font color="#FF8C00">py-faster-rcnn/caffe-fast-rcnn/include/caffe/layers</font> 里的，所有以cudnn开头的文件，例如cudnn_conv_layer.hpp。   都替换成最新版的caffe里的相应的同名文件。<br>3.将 <font color="#FF8C00">py-faster-rcnn/caffe-fast-rcnn/src/caffe/layer</font> 里的，所有以cudnn开头的文件，例如cudnn_lrn_layer.cu，cudnn_pooling_layer.cpp，cudnn_sigmoid_layer.cu。都替换成最新版的caffe里的相应的同名文件。</p>
+<p>rbgirshick的py-faster-rcnn实现，因为其cudnn实现为旧版本的实现，所有出现了以上问题.</p>
+<hr>
+<h3 id="2-运行Demo"><a href="#2-运行Demo" class="headerlink" title="2.运行Demo"></a>2.运行Demo</h3><h4 id="1-下载预先训练好的module。"><a href="#1-下载预先训练好的module。" class="headerlink" title="1).下载预先训练好的module。"></a>1).下载预先训练好的module。</h4><font color="#FF8C00">在下载过程中如果很慢，可以直接复制命令行中的下载地址进行下载，将下载好的数据包解压到py-faster-rcnn/data文件夹中</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd $FRCN_ROOT</div><div class="line">./data/scripts/fetch_faster_rcnn_models.sh</div></pre></td></tr></table></figure>
+<h4 id="2-运行Demo-1"><a href="#2-运行Demo-1" class="headerlink" title="2).运行Demo"></a>2).运行Demo</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd $FRCN_ROOT</div><div class="line">./tools/demo.py</div></pre></td></tr></table></figure>
+<p><img src="/images/pic_4_20_6.png" align="center"></p>
+<h3 id="3-检测自己的图片"><a href="#3-检测自己的图片" class="headerlink" title="3.检测自己的图片"></a>3.检测自己的图片</h3><h4 id="1-将所需要检测的图片放在目录py-faster-rcnn-data-demo中"><a href="#1-将所需要检测的图片放在目录py-faster-rcnn-data-demo中" class="headerlink" title="1).将所需要检测的图片放在目录py-faster-rcnn/data/demo中"></a>1).将所需要检测的图片放在目录py-faster-rcnn/data/demo中</h4><p><img src="/images/pic_4_20_1.png" align="center"></p>
+<h4 id="2-修改-py-faster-rcnn-tools-demo-py-文件"><a href="#2-修改-py-faster-rcnn-tools-demo-py-文件" class="headerlink" title="2).修改 py-faster-rcnn/tools/demo.py 文件"></a>2).修改 <font color="#FF8C00">py-faster-rcnn/tools/demo.py</font> 文件</h4><p>将下面的代码段进行修改为自己的图片的名即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">im_names = [<span class="string">'000456.jpg'</span>, <span class="string">'000542.jpg'</span>, <span class="string">'001150.jpg'</span>, <span class="string">'001763.jpg'</span>, <span class="string">'004545.jpg'</span>]</div></pre></td></tr></table></figure>
+<h4 id="3-运行"><a href="#3-运行" class="headerlink" title="3).运行"></a>3).运行</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd $FRCN_ROOT</div><div class="line">./tools/demo.py</div></pre></td></tr></table></figure>
+<p><strong>运行结果：</strong></p>
+<p><img src="/images/pic_4_20_4.png" align="center"></p>
+<p><img src="/images/pic_4_20_2.png" align="center"></p>
+<p><img src="/images/pic_4_20_3.png" align="center"></p>
+<hr>
+<h3 id="3-训练PASCAL-VOC-2007的数据集"><a href="#3-训练PASCAL-VOC-2007的数据集" class="headerlink" title="3.训练PASCAL VOC 2007的数据集"></a>3.训练PASCAL VOC 2007的数据集</h3><h4 id="1-下载训练、验证以及测试集和VOCdevkit"><a href="#1-下载训练、验证以及测试集和VOCdevkit" class="headerlink" title="1).下载训练、验证以及测试集和VOCdevkit"></a>1).下载训练、验证以及测试集和VOCdevkit</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">wget http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtrainval_06-Nov<span class="number">-2007.</span>tar</div><div class="line">wget http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtest_06-Nov<span class="number">-2007.</span>tar</div><div class="line">wget http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCdevkit_08-Jun<span class="number">-2007.</span>tar</div></pre></td></tr></table></figure>
+<h4 id="2-解压，直接运行就行，将他们都解压到一个文件夹-VOCdevkit-下"><a href="#2-解压，直接运行就行，将他们都解压到一个文件夹-VOCdevkit-下" class="headerlink" title="2).解压，直接运行就行，将他们都解压到一个文件夹 VOCdevkit 下"></a>2).解压，直接运行就行，将他们都解压到一个文件夹 <font color="#FF8C00">VOCdevkit</font> 下</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tar xvf VOCtrainval_06-Nov-2007.tar</div><div class="line">tar xvf VOCtest_06-Nov-2007.tar</div><div class="line">tar xvf VOCdevkit_08-Jun-2007.ta</div></pre></td></tr></table></figure>
+<p>解压后的文件结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$VOCdevkit/                           # development kit</div><div class="line">$VOCdevkit/VOCcode/                   # VOC utility code</div><div class="line">$VOCdevkit/VOC2007                    # image sets, annotations, etc.</div><div class="line"># ... and several other directories ...</div></pre></td></tr></table></figure>
+<h4 id="3-将VOCdevkit文件夹改名为-VOCdevkit2007-，然后放到data文件夹下，也可以使用软链接的方式"><a href="#3-将VOCdevkit文件夹改名为-VOCdevkit2007-，然后放到data文件夹下，也可以使用软链接的方式" class="headerlink" title="3).将VOCdevkit文件夹改名为 VOCdevkit2007 ，然后放到data文件夹下，也可以使用软链接的方式"></a>3).将VOCdevkit文件夹改名为 <font color="#FF8C00">VOCdevkit2007</font> ，然后放到data文件夹下，也可以使用软链接的方式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd $FRCN_ROOT/data</div><div class="line">ln -s $VOCdevkit VOCdevkit2007</div></pre></td></tr></table></figure>
+<h4 id="4-下载预训练好的ImageNet模型。"><a href="#4-下载预训练好的ImageNet模型。" class="headerlink" title="4).下载预训练好的ImageNet模型。"></a>4).下载预训练好的ImageNet模型。</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd $FRCN_ROOT</div><div class="line">./data/scripts/fetch_imagenet_models.sh</div></pre></td></tr></table></figure>
+<p>同样的，当在命令行中无法下载的时候，可以复制链接直接在浏览器中下载，然后将下载好的模型解压到py-faster-rcnn/data文件夹中。</p>
+<h4 id="5-训练数据"><a href="#5-训练数据" class="headerlink" title="5).训练数据"></a>5).训练数据</h4><p>(1)使用 <font color="#FF8C00">交替优化（alternating optimization）</font> 算法来训练和测试Faster R-CNN</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> cd $FRCN_ROOT</div><div class="line">./experiments/scripts/faster_rcnn_alt_opt.sh [GPU_ID] [NET] [--set ...]</div><div class="line"><span class="comment"># GPU_ID是你想要训练的GPUID</span></div><div class="line"><span class="comment"># 你可以选择如下的网络之一进行训练：ZF, VGG_CNN_M_1024, VGG16</span></div><div class="line"><span class="comment"># --set ... 运行你自定义fast_rcnn.config参数,例如.</span></div><div class="line"><span class="comment"># --set EXP_DIR seed_rng1701 RNG_SEED 1701</span></div><div class="line"><span class="comment"># 例如命令</span></div><div class="line">./experiments/scripts/faster_rcnn_alt_opt.sh <span class="number">0</span> ZF pascal_voc</div></pre></td></tr></table></figure>
+<p>2) 使用近似联合训练（ approximate joint training）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd $FRCN_ROOT</div><div class="line">./experiments/scripts/faster_rcnn_end2end.sh [GPU_ID] [NET] [--set ...]</div></pre></td></tr></table></figure>
+<p>这个方法是联合RPN模型和Fast R-CNN网络训练。而不是交替训练。用此种方法比交替优化快1.5倍，但是准确率相近。所以推荐使用这种方法。</p>
+<hr>
+<h2 id="训练自己的数据集是遇到的问题"><a href="#训练自己的数据集是遇到的问题" class="headerlink" title="训练自己的数据集是遇到的问题"></a>训练自己的数据集是遇到的问题</h2><h4 id="问题1："><a href="#问题1：" class="headerlink" title="问题1："></a>问题1：</h4><p><img src="/images/prob1.png" align="center"></p>
+<p><strong>解决方法：</strong><br>在/py-faster-rcnn/lib/fast_rcnn/train.py文件中添加 <font color="#FF8C00">import google.protobuf.text_format</font>代码即可。</p>
+<hr>
+<h4 id="问题2："><a href="#问题2：" class="headerlink" title="问题2："></a>问题2：</h4><p><img src="/images/prob2.png" align="center"></p>
+<p><strong>解决方法：</strong></p>
+<h5 id="方法一："><a href="#方法一：" class="headerlink" title="方法一："></a>方法一：</h5><p>这是因为最近的numpy(1.12.1)版本不支持浮点数作为下标，用浮点数作为下标将产生IndexError，解决方法可以通过将numpy降到1.11.0。Faster RCNN 发布的时候使用的一些库现在都升级了，所以需要对代码中一些细节进行修改！<br>另，查看numpy版本的方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy</div><div class="line"><span class="keyword">print</span> numpy.__version__</div><div class="line"></div><div class="line">&gt;&gt;<span class="number">1.12</span><span class="number">.1</span></div></pre></td></tr></table></figure>
+<h5 id="方法二："><a href="#方法二：" class="headerlink" title="方法二："></a>方法二：</h5><p>修改如下几个地方的code：</p>
+<p>1) /home/xxx/py-faster-rcnn/lib/roi_data_layer/minibatch.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">将第<span class="number">26</span>行：fg_rois_per_image = np.round(cfg.TRAIN.FG_FRACTION * rois_per_image)</div><div class="line">改为：fg_rois_per_image = np.round(cfg.TRAIN.FG_FRACTION * rois_per_image).astype(np.int)</div></pre></td></tr></table></figure>
+<p>2) /home/xxx/py-faster-rcnn/lib/datasets/ds_utils.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">将第<span class="number">12</span>行：hashes = np.round(boxes * scale).dot(v)</div><div class="line">改为：hashes = np.round(boxes * scale).dot(v).astype(np.int)</div></pre></td></tr></table></figure>
+<p>3) /home/xxx/py-faster-rcnn/lib/fast_rcnn/test.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">将第<span class="number">129</span>行： hashes = np.round(blobs[<span class="string">'rois'</span>] * cfg.DEDUP_BOXES).dot(v)</div><div class="line">改为： hashes = np.round(blobs[<span class="string">'rois'</span>] * cfg.DEDUP_BOXES).dot(v).astype(np.int)</div></pre></td></tr></table></figure>
+<p>4) /home/xxx/py-faster-rcnn/lib/rpn/proposal_target_layer.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">将第<span class="number">60</span>行：fg_rois_per_image = np.round(cfg.TRAIN.FG_FRACTION * rois_per_image)</div><div class="line">改为：fg_rois_per_image = np.round(cfg.TRAIN.FG_FRACTION * rois_per_image).astype(np.int)</div></pre></td></tr></table></figure>
+<p>5)修改 /home/lzx/py-faster-rcnn/lib/rpn/proposal_target_layer.py，转到123行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> ind <span class="keyword">in</span> inds:</div><div class="line">        cls = clss[ind]</div><div class="line">        start = <span class="number">4</span> * cls</div><div class="line">        end = start + <span class="number">4</span></div><div class="line">        bbox_targets[ind, start:end] = bbox_target_data[ind, <span class="number">1</span>:]</div><div class="line">        bbox_inside_weights[ind, start:end] = cfg.TRAIN.BBOX_INSIDE_WEIGHTS</div><div class="line">    <span class="keyword">return</span> bbox_targets, bbox_inside_weights</div></pre></td></tr></table></figure>
+<p>改为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> ind <span class="keyword">in</span> inds:</div><div class="line">        ind = int(ind)</div><div class="line">        cls = clss[ind]</div><div class="line">        start = int(<span class="number">4</span> * cos)</div><div class="line">        end = int(start + <span class="number">4</span>)</div><div class="line">        bbox_targets[ind, start:end] = bbox_target_data[ind, <span class="number">1</span>:]</div><div class="line">        bbox_inside_weights[ind, start:end] = cfg.TRAIN.BBOX_INSIDE_WEIGHTS</div><div class="line">    <span class="keyword">return</span> bbox_targets, bbox_inside_weights</div></pre></td></tr></table></figure>
+<hr>
+<h4 id="问题三："><a href="#问题三：" class="headerlink" title="问题三："></a>问题三：</h4><p><img src="/images/prob3.png" align="center"></p>
+<p><strong>解决方法：</strong></p>
+<p>显存不足。方法一：减小batch size，或者将图片的大小resize到一个更小的大小。方法二：换个大显存的显卡。。。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/caffe/" rel="tag"># caffe</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/02/sort_algorithm/" rel="prev" title="排序算法总结">
+                排序算法总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="rlchen" />
+          <p class="site-author-name" itemprop="name">rlchen</p>
+          <p class="site-description motion-element" itemprop="description">Stay hungry,Stay foolish.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置与运行Demo"><span class="nav-number">1.</span> <span class="nav-text">配置与运行Demo</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-配置Faster-rcnn"><span class="nav-number">1.1.</span> <span class="nav-text">1.配置Faster rcnn</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-将faster-rcnn项目clone到本地"><span class="nav-number">1.1.1.</span> <span class="nav-text">1).将faster-rcnn项目clone到本地</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-编译Cpython-modules"><span class="nav-number">1.1.2.</span> <span class="nav-text">2).编译Cpython modules</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-编译Caffe、pycaffe"><span class="nav-number">1.1.3.</span> <span class="nav-text">3).编译Caffe、pycaffe</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-运行Demo"><span class="nav-number">1.2.</span> <span class="nav-text">2.运行Demo</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-下载预先训练好的module。"><span class="nav-number">1.2.1.</span> <span class="nav-text">1).下载预先训练好的module。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-运行Demo-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">2).运行Demo</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-检测自己的图片"><span class="nav-number">1.3.</span> <span class="nav-text">3.检测自己的图片</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-将所需要检测的图片放在目录py-faster-rcnn-data-demo中"><span class="nav-number">1.3.1.</span> <span class="nav-text">1).将所需要检测的图片放在目录py-faster-rcnn/data/demo中</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-修改-py-faster-rcnn-tools-demo-py-文件"><span class="nav-number">1.3.2.</span> <span class="nav-text">2).修改 py-faster-rcnn/tools/demo.py 文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-运行"><span class="nav-number">1.3.3.</span> <span class="nav-text">3).运行</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-训练PASCAL-VOC-2007的数据集"><span class="nav-number">1.4.</span> <span class="nav-text">3.训练PASCAL VOC 2007的数据集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-下载训练、验证以及测试集和VOCdevkit"><span class="nav-number">1.4.1.</span> <span class="nav-text">1).下载训练、验证以及测试集和VOCdevkit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-解压，直接运行就行，将他们都解压到一个文件夹-VOCdevkit-下"><span class="nav-number">1.4.2.</span> <span class="nav-text">2).解压，直接运行就行，将他们都解压到一个文件夹 VOCdevkit 下</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-将VOCdevkit文件夹改名为-VOCdevkit2007-，然后放到data文件夹下，也可以使用软链接的方式"><span class="nav-number">1.4.3.</span> <span class="nav-text">3).将VOCdevkit文件夹改名为 VOCdevkit2007 ，然后放到data文件夹下，也可以使用软链接的方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-下载预训练好的ImageNet模型。"><span class="nav-number">1.4.4.</span> <span class="nav-text">4).下载预训练好的ImageNet模型。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-训练数据"><span class="nav-number">1.4.5.</span> <span class="nav-text">5).训练数据</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#训练自己的数据集是遇到的问题"><span class="nav-number">2.</span> <span class="nav-text">训练自己的数据集是遇到的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#问题1："><span class="nav-number">2.0.1.</span> <span class="nav-text">问题1：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#问题2："><span class="nav-number">2.0.2.</span> <span class="nav-text">问题2：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#方法一："><span class="nav-number">2.0.2.1.</span> <span class="nav-text">方法一：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方法二："><span class="nav-number">2.0.2.2.</span> <span class="nav-text">方法二：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#问题三："><span class="nav-number">2.0.3.</span> <span class="nav-text">问题三：</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rlchen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

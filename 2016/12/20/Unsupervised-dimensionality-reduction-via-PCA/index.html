@@ -1,0 +1,744 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="machine lerning," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="PCA原理PCA(Principal component analysis) 是一个非监督的线性转化技术，广泛用于各个领域，其中最流行应用于降维。PCA帮助我们识别数据中不同特征之间的相关性，简而言之，PCA旨在找到高维数据的最大方差的方向，并将其投影到具有等于或小于原始尺寸的新的子空间。新的子空间的正交轴（主分量）可以被解释为最大方差的方向，给定新特征轴彼此正交的约束，如下图所示。这里，x1 和">
+<meta name="keywords" content="machine lerning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PCA降维">
+<meta property="og:url" content="http://yoursite.com/2016/12/20/Unsupervised-dimensionality-reduction-via-PCA/index.html">
+<meta property="og:site_name" content="RlChen's Blog">
+<meta property="og:description" content="PCA原理PCA(Principal component analysis) 是一个非监督的线性转化技术，广泛用于各个领域，其中最流行应用于降维。PCA帮助我们识别数据中不同特征之间的相关性，简而言之，PCA旨在找到高维数据的最大方差的方向，并将其投影到具有等于或小于原始尺寸的新的子空间。新的子空间的正交轴（主分量）可以被解释为最大方差的方向，给定新特征轴彼此正交的约束，如下图所示。这里，x1 和">
+<meta property="og:image" content="http://yoursite.com/images/pca1.png">
+<meta property="og:image" content="http://yoursite.com/images/pca2.png">
+<meta property="og:image" content="http://yoursite.com/images/pca3.png">
+<meta property="og:image" content="http://yoursite.com/images/pca4.png">
+<meta property="og:updated_time" content="2016-12-21T11:44:00.283Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PCA降维">
+<meta name="twitter:description" content="PCA原理PCA(Principal component analysis) 是一个非监督的线性转化技术，广泛用于各个领域，其中最流行应用于降维。PCA帮助我们识别数据中不同特征之间的相关性，简而言之，PCA旨在找到高维数据的最大方差的方向，并将其投影到具有等于或小于原始尺寸的新的子空间。新的子空间的正交轴（主分量）可以被解释为最大方差的方向，给定新特征轴彼此正交的约束，如下图所示。这里，x1 和">
+<meta name="twitter:image" content="http://yoursite.com/images/pca1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/20/Unsupervised-dimensionality-reduction-via-PCA/"/>
+
+
+
+
+
+  <title> PCA降维 | RlChen's Blog </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">RlChen's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/20/Unsupervised-dimensionality-reduction-via-PCA/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="rlchen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="RlChen's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="RlChen's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                PCA降维
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-20T16:18:51+08:00">
+                2016-12-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/machine-learning/" itemprop="url" rel="index">
+                    <span itemprop="name">machine learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="PCA原理"><a href="#PCA原理" class="headerlink" title="PCA原理"></a>PCA原理</h2><p><font color="#FF8C00">PCA(Principal component analysis)</font> 是一个非监督的线性转化技术，广泛用于各个领域，其中最流行应用于降维。<strong>PCA</strong>帮助我们识别数据中不同特征之间的相关性，简而言之，<strong>PCA</strong>旨在找到高维数据的最大方差的方向，并将其投影到具有等于或小于原始尺寸的新的子空间。新的子空间的正交轴（主分量）可以被解释为最大方差的方向，给定新特征轴彼此正交的约束，如下图所示。这里，<font color="#FF8C00">x1</font> 和 <font color="#FF8C00">x2</font> 是原来的特征轴，<font color="#FF8C00">PC1</font> 和 <font color="#FF8C00">PC2</font> 是主成分：</p>
+<a id="more"></a>
+<p><img src="/images/pca1.png" align="center"></p>
+<p>使用 <strong>PCA</strong> 来降维，需要构造一个 d x k 维的转化矩阵 <font color="#FF8C00">W</font> ，通过 <font color="#FF8C00">W</font> 将样本向量 <strong>x</strong> 映射到一个新的 k 维的子特征空间中，该维度比原来的 d 维度更低：</p>
+<p>$$X = [x_1, x_2,…,x_d], X\in R^d$$</p>
+<p>$$\downarrow XW, W \in R^{d\times k}$$</p>
+<p>$$z = [z_1, z_2,…, z_k], z\in R^k$$</p>
+<p>转化的结果就是原来 d 维数据转化为 k 维数据（一般，k &lt;&lt; d），假定它们与其他主分量不相关（正交），第一主分量将具有最大可能方差，并且所有后续主分量将具有最大可能方差。<strong>注意，<em>PCA</em> 方向对数据缩放非常敏感，如果在不同尺度上测量特征，并且我们想对所有特征赋予同等重要性，我们需要在PCA之前对特征进行标准化。</strong></p>
+<p>总结 <strong>PCA</strong> 算法降维的主要步骤：</p>
+<ol>
+<li>标准化 d 维的数据集。</li>
+<li>构建协方差矩阵（covariance matrix）。</li>
+<li>将协方差矩阵分解为特征向量和特征值。</li>
+<li>选择 k 个最大的特征值所对应的 k 个特征向量，其中 k 是所需要降维至的维度（k &lt;= d）。</li>
+<li>从“最大的” K 个特征向量中构建映射矩阵 <strong>W</strong>.</li>
+<li>将输入的 d 维矩阵 <strong>X</strong> 通过映射矩阵 <strong>W</strong> 得到新的 k 维特征数据。</li>
+</ol>
+<hr>
+<h2 id="PCA实现"><a href="#PCA实现" class="headerlink" title="PCA实现"></a>PCA实现</h2><p>这里主要将处理主成分分析的：标准化数据，构造协方差矩阵，从协方差矩阵中获得特征值和特征向量，同时根据特征值的有大到小的顺序对特征向量进行排序。</p>
+<p>实例中将使用<font color="#FF8C00">酒（Wine）</font>的数据集：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div><div class="line">df_wine = pd.read_csv(<span class="string">'https://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data'</span>, header=<span class="keyword">None</span>)</div><div class="line"></div><div class="line">print(df_wine.head())</div></pre></td></tr></table></figure>
+<p>将数据集分为训练集和测试集，各占70%和30%，并将其标准化为单位大小:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.cross_validation <span class="keyword">import</span> train_test_split</div><div class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</div><div class="line"></div><div class="line">X, y = df_wine.iloc[:, <span class="number">1</span>:].values, df_wine.iloc[:, <span class="number">0</span>].values</div><div class="line"></div><div class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.3</span>, random_state=<span class="number">0</span>)</div><div class="line"></div><div class="line">sc = StandardScaler()</div><div class="line">X_train_std = sc.fit_transform(X_train)</div><div class="line">X_test_std = sc.transform(X_test)</div></pre></td></tr></table></figure>
+<p>接下来，构建协方差矩阵，协方差矩阵是一个 d x d 维的对称矩阵，其中 d 是数据集的维度大小，该矩阵存储不同特征之间的成对协方差。例如：对于两个特征 $x_j$ 和 $x_k$ 之间的协方差，可以用下列公式计算：</p>
+<p>$$\sigma _{jk} = \frac{1}{n} \sum _{i=1}^{N}(x_j^{(i)}-\mu _j)(x_k^{(i)}-\mu _k)$$</p>
+<p>其中，$\mu_j, \mu_k$ 分别是样本中特征 j , k 的均值。注意：加入我们对数据集进行了标准化后，均值均为0。两个特征之间的协方差是正值，说明这两个特征是同时增大或减小的；反之，协方差为负值，则说明这两个特征是反向增长的。 例如，一个如下图所示的协方差矩阵：</p>
+<p>$$\sum=\begin{vmatrix} \sigma _1^2 &amp; \sigma _{12} &amp; \sigma _{13}\\ \sigma _{21} &amp; \sigma _2^2 &amp; \sigma _{23}\\ \sigma _{31} &amp; \sigma _{32} &amp; \sigma _3^2 \end{vmatrix}$$</p>
+<p>特征值所对应的特征向量代表着主成分（最大方差的方向），因此，特征值定义了它们的大小。在<font color="#FF8C00">酒（Wine）</font>的数据集中，我们将从13 x 13 维的协方差矩阵中获得13个特征值和特征向量。</p>
+<p>由线性代数知识可以知道，对于方阵 <font color="#FF8C00">x</font> ，特征向量 <font color="#FF8C00">v</font> 将满足下面的式子：</p>
+<p>$$xv = \lambda v$$</p>
+<blockquote>
+<p>其中 $\lambda$ 是一个缩放因子：也就是特征值。</p>
+</blockquote>
+<p>由 <font color="#FF8C00">NumPy</font> 可以获得数据集的协方差矩阵：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line">cov_mat = np.cov(X_train_std.T)</div><div class="line">eigen_vals, eigen_vecs = np.linalg.eig(cov_mat)</div></pre></td></tr></table></figure>
+<p>输出特征值 <font color="#FF8C00">eigen_vals</font> 为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[ <span class="number">4.8923083</span>   <span class="number">2.46635032</span>  <span class="number">1.42809973</span>  <span class="number">1.01233462</span>  <span class="number">0.84906459</span>  <span class="number">0.60181514</span>  <span class="number">0.52251546</span>  <span class="number">0.08414846</span>  <span class="number">0.33051429</span>  <span class="number">0.29595018</span>  <span class="number">0.16831254</span>  <span class="number">0.21432212</span>  <span class="number">0.2399553</span> ]</div></pre></td></tr></table></figure>
+<p>因为我们需要将我们的数据集降维至一个新的特征子空间中，我们仅需要选择包含最多信息的特征向量（主成分）。又由于特征值定义了特征向量的大小，所以需要将特征值进行有大到小的排序，我们仅需要最大的 <strong>k</strong> 个特征值所对应的特征向量。</p>
+<p>在我们选择 <strong>k</strong> 个最大信息的特征向量前，我们可以来看一下每个特征值所占的比重，用下面公式：</p>
+<p>$$\frac{\lambda_j}{\sum_{j=1}^{d}\lambda_j}$$</p>
+<p>使用 <font color="#FF8C00">NumPy</font> 的 <font color="#FF8C00">cumsum</font> 函数，我们可以得到变量的累计和，然后用 <font color="#FF8C00">matplotlib</font> 的 <font color="#FF8C00">step</font> 方法画出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">tot = sum(eigen_vals)</div><div class="line">var_exp = [(i / tot) <span class="keyword">for</span> i <span class="keyword">in</span> sorted(eigen_vals, reverse=<span class="keyword">True</span>)]</div><div class="line"></div><div class="line">cum_var_exp = np.cumsum(var_exp)</div><div class="line"></div><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"></div><div class="line">plt.bar(range(<span class="number">1</span>, <span class="number">14</span>), var_exp, alpha=<span class="number">0.5</span>, align=<span class="string">'center'</span>, label=<span class="string">'individual variance'</span>)</div><div class="line">plt.step(range(<span class="number">1</span>, <span class="number">14</span>), cum_var_exp, where=<span class="string">'mid'</span>, label=<span class="string">'cumulative variance'</span>)</div><div class="line"></div><div class="line">plt.xlabel(<span class="string">'Principal components'</span>)</div><div class="line">plt.ylabel(<span class="string">'Explained variance ratio'</span>)</div><div class="line">plt.legend(loc=<span class="string">'best'</span>)</div><div class="line">plt.show()</div></pre></td></tr></table></figure>
+<p>结果如图：</p>
+<p><img src="/images/pca2.png" align="center"></p>
+<p>从上图可以看出，第一个主成分占了接近40%，第一和第二共占了近60%的数据的方差。</p>
+<hr>
+<h2 id="特征变换（Feature-transformation）"><a href="#特征变换（Feature-transformation）" class="headerlink" title="特征变换（Feature transformation）"></a>特征变换（Feature transformation）</h2><p>通过将特征对按特征值的大小进行减序排列，从选择的特征向量中构建一个映射矩阵，使用映射矩阵将数据集转换到更低维度的子空间中。</p>
+<p>首先将特征对进行逆向排序：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">eigen_pairs = [(np.abs(eigen_vals[i]), eigen_vecs[:, i]) <span class="keyword">for</span> i <span class="keyword">in</span> range(len(eigen_vals))]</div><div class="line">eigen_pairs.sort(reverse=<span class="keyword">True</span>)</div><div class="line"></div><div class="line">print(eigen_pairs)</div></pre></td></tr></table></figure>
+<p>输出部分值：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[(<span class="number">4.8923083032737456</span>, array([ <span class="number">0.14669811</span>, <span class="number">-0.24224554</span>, <span class="number">-0.02993442</span>, <span class="number">-0.25519002</span>,  <span class="number">0.12079772</span>, <span class="number">0.38934455</span>,  <span class="number">0.42326486</span>, <span class="number">-0.30634956</span>, <span class="number">0.30572219</span>, <span class="number">-0.09869191</span>, <span class="number">0.30032535</span>,  <span class="number">0.36821154</span>,  <span class="number">0.29259713</span>])),</div><div class="line">(<span class="number">2.4663503157592297</span>, array([ <span class="number">0.50417079</span>,  <span class="number">0.24216889</span>,  <span class="number">0.28698484</span>, <span class="number">-0.06468718</span>,  <span class="number">0.22995385</span>, <span class="number">0.09363991</span>,  <span class="number">0.01088622</span>,  <span class="number">0.01870216</span>, <span class="number">0.03040352</span>,  <span class="number">0.54527081</span>, <span class="number">-0.27924322</span>, <span class="number">-0.174365</span>,  <span class="number">0.36315461</span>])),...]</div></pre></td></tr></table></figure>
+<p>这里我们选择两个最大值的特征向量，因为已经得到了数据集近 60% 的方差。同时也是为了可以根据这两个特征值对数据用图画出来。在实际中，主成分数量的选择要根据计算效率和分类器的性能的平衡来进行选择：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">w = np.hstack((eigen_pairs[<span class="number">0</span>][<span class="number">1</span>][:, np.newaxis], eigen_pairs[<span class="number">1</span>][<span class="number">1</span>][:, np.newaxis]))</div><div class="line">print(<span class="string">'Matrix W:\n'</span>, w)</div></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">Matrix W:</div><div class="line"> [[ <span class="number">0.14669811</span>  <span class="number">0.50417079</span>]</div><div class="line"> [<span class="number">-0.24224554</span>  <span class="number">0.24216889</span>]</div><div class="line"> [<span class="number">-0.02993442</span>  <span class="number">0.28698484</span>]</div><div class="line"> [<span class="number">-0.25519002</span> <span class="number">-0.06468718</span>]</div><div class="line"> [ <span class="number">0.12079772</span>  <span class="number">0.22995385</span>]</div><div class="line"> [ <span class="number">0.38934455</span>  <span class="number">0.09363991</span>]</div><div class="line"> [ <span class="number">0.42326486</span>  <span class="number">0.01088622</span>]</div><div class="line"> [<span class="number">-0.30634956</span>  <span class="number">0.01870216</span>]</div><div class="line"> [ <span class="number">0.30572219</span>  <span class="number">0.03040352</span>]</div><div class="line"> [<span class="number">-0.09869191</span>  <span class="number">0.54527081</span>]</div><div class="line"> [ <span class="number">0.30032535</span> <span class="number">-0.27924322</span>]</div><div class="line"> [ <span class="number">0.36821154</span> <span class="number">-0.174365</span>  ]</div><div class="line"> [ <span class="number">0.29259713</span>  <span class="number">0.36315461</span>]]</div></pre></td></tr></table></figure>
+<p>通过上面的代码，我们已经从最大的两个特征向量中得到了一个 13 x 2 维度的映射矩阵 <font color="#FF8C00">W</font> ，使用映射矩阵，现在可以将样本数据集 <strong>x</strong> 用<font color="#FF8C00">PCA</font> 转化到一个只有两个特征的二维子空间 <font color="#FF8C00">$x^`$ </font> ：</p>
+<p>$$X^`=XW$$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">X_train_pca = X_train_std.dot(w)</div><div class="line"></div><div class="line">print(X_train)pca.shape)</div></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(<span class="number">124</span>, <span class="number">2</span>)</div></pre></td></tr></table></figure>
+<p>现在<font color="#FF8C00">酒（Wine）</font>的数据集存储在一个 124 x 2 维的矩阵中，用图画出来：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">colors = [<span class="string">'r'</span>, <span class="string">'b'</span>, <span class="string">'g'</span>]</div><div class="line">markers = [<span class="string">'s'</span>, <span class="string">'x'</span>, <span class="string">'o'</span>]</div><div class="line"></div><div class="line"><span class="keyword">for</span> l, c, m <span class="keyword">in</span> zip(np.unique(y_train), colors, markers):</div><div class="line">    plt.scatter(X_train_pca[y_train==l, <span class="number">0</span>], X_train_pca[y_train==l, <span class="number">1</span>], c=c, label=l, marker=m)</div><div class="line"></div><div class="line">plt.xlabel(<span class="string">'PC 1'</span>)</div><div class="line">plt.ylabel(<span class="string">'PC 2'</span>)</div><div class="line">plt.legend(loc=<span class="string">'lower left'</span>)</div><div class="line">plt.show()</div></pre></td></tr></table></figure>
+<p><img src="/images/pca3.png" align="center"></p>
+<p>由图可以看出，数据相比于 y 轴，大多数都是沿着 x 轴（第一主成分）分布的。这也就和哦我们之前画出的占比率图一致。</p>
+<p>尽管我们有着类标签的信息，但是我们应该清楚，<font color="#FF8C00">PCA</font> 是一个非监督性的技术，它并没有用到类标签信息。</p>
+<hr>
+<h2 id="使用-scikit-learn-的主成分分析（PCA）"><a href="#使用-scikit-learn-的主成分分析（PCA）" class="headerlink" title="使用 scikit-learn 的主成分分析（PCA）"></a>使用 scikit-learn 的主成分分析（PCA）</h2><p>之前的部分已经讲解了 <font color="#FF8C00">PCA</font> 的内部工作原理，其实我们可以直接调用scikit-learn的内部PCA转换器。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> matplotlib.colors <span class="keyword">import</span> ListedColormap</div><div class="line"></div><div class="line"><span class="comment"># 画出分类的结果图</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_decision_regions</span><span class="params">(X, y, classifier, resolution=<span class="number">0.02</span>)</span>:</span></div><div class="line">    <span class="comment"># 设置标记和颜色map</span></div><div class="line">    markers = (<span class="string">'s'</span>, <span class="string">'x'</span>, <span class="string">'o'</span>, <span class="string">'^'</span>, <span class="string">'v'</span>)</div><div class="line">    colors = (<span class="string">'red'</span>, <span class="string">'blue'</span>, <span class="string">'lightgreen'</span>, <span class="string">'gray'</span>, <span class="string">'cyan'</span>)</div><div class="line">    cmap = ListedColormap(colors[:len(np.unique(y))])</div><div class="line"></div><div class="line">    <span class="comment"># 画出分界面</span></div><div class="line">    x1_min, x1_max = X[:, <span class="number">0</span>].min() - <span class="number">1</span>, X[:, <span class="number">0</span>].max() + <span class="number">1</span></div><div class="line">    x2_min, x2_max = X[:, <span class="number">1</span>].min() - <span class="number">1</span>, X[:, <span class="number">1</span>].max() + <span class="number">1</span></div><div class="line"></div><div class="line">    xx1, xx2 = np.meshgrid(np.arange(x1_min, x1_max, resolution),</div><div class="line">                           np.arange(x2_min, x2_max, resolution))</div><div class="line"></div><div class="line">    Z = classifier.predict(np.array([xx1.ravel(), xx2.ravel()]).T)</div><div class="line">    Z = Z.reshape(xx1.shape)</div><div class="line"></div><div class="line">    plt.contourf(xx1, xx2, Z, alpha=<span class="number">0.4</span>, cmap=cmap)</div><div class="line">    plt.xlim(xx1.min(), xx1.max())</div><div class="line">    plt.ylim(xx2.min(), xx2.max())</div><div class="line"></div><div class="line">    <span class="comment"># 画出样本类</span></div><div class="line">    <span class="keyword">for</span> idx, cl <span class="keyword">in</span> enumerate(np.unique(y)):</div><div class="line">        plt.scatter(x=X[y==cl, <span class="number">0</span>], y=X[y==cl, <span class="number">1</span>], alpha=<span class="number">0.8</span>,</div><div class="line">                    c=cmap(idx), marker=markers[idx], label=cl)</div><div class="line"></div><div class="line"><span class="keyword">from</span> sklearn.decomposition <span class="keyword">import</span> PCA</div><div class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</div><div class="line"><span class="comment"># 用PCA降至2维</span></div><div class="line">pca = PCA(n_components=<span class="number">2</span>)</div><div class="line">lr = LogisticRegression()</div><div class="line">X_train_pca = pca.fit_transform(X_train_std)</div><div class="line">X_test_pca = pca.transform(X_test_std)</div><div class="line"></div><div class="line">lr.fit(X_train_pca, y_train)</div><div class="line">plot_decision_regions(X_train_pca, y_train, classifier=lr)</div><div class="line">plt.xlabel(<span class="string">'PC1'</span>)</div><div class="line">plt.ylabel(<span class="string">'PC2'</span>)</div><div class="line">plt.legend(loc=<span class="string">'lower left'</span>)</div><div class="line">plt.show()</div></pre></td></tr></table></figure>
+<p>通过执行上面的代码，我们将训练数据减至2个主成分的轴，结果如下图所示：</p>
+<p><img src="/images/pca4.png" align="center"></p>
+<p>我们可以通过下面的代码，将<font color="#FF8C00">n_components</font> 设为 <font color="#FF8C00">None</font> 。此时，所有的主成分占的比例都能通过 <font color="#FF8C00">explained_variance<em>ratio</em></font> 属性得到：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">pca = PCA(n_components=<span class="keyword">None</span>)</div><div class="line">lr = LogisticRegression()</div><div class="line">X_train_pca = pca.fit_transform(X_train_std)</div><div class="line">pca.explained_variance_ratio_</div></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[ <span class="number">0.37329648</span>  <span class="number">0.18818926</span>  <span class="number">0.10896791</span>  <span class="number">0.07724389</span>  <span class="number">0.06478595</span>  <span class="number">0.04592014</span>  <span class="number">0.03986936</span>  <span class="number">0.02521914</span>  <span class="number">0.02258181</span>  <span class="number">0.01830924</span>  <span class="number">0.01635336</span>  <span class="number">0.01284271</span> <span class="number">0.00642076</span>]</div></pre></td></tr></table></figure>
+<p>注意，我们设置 <font color="#FF8C00">n_components=None</font> 当我们初始化PCA类时，它会返回所有的排好序的主成分，而不是执行降维。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/machine-lerning/" rel="tag"># machine lerning</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/06/kaoyan-diary/" rel="next" title="考研日记">
+                <i class="fa fa-chevron-left"></i> 考研日记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/16/[machine lerning]-数据预处理1/" rel="prev" title="建立好的训练集——数据预处理（一）">
+                建立好的训练集——数据预处理（一） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="rlchen" />
+          <p class="site-author-name" itemprop="name">rlchen</p>
+          <p class="site-description motion-element" itemprop="description">Stay hungry,Stay foolish.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#PCA原理"><span class="nav-number">1.</span> <span class="nav-text">PCA原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PCA实现"><span class="nav-number">2.</span> <span class="nav-text">PCA实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特征变换（Feature-transformation）"><span class="nav-number">3.</span> <span class="nav-text">特征变换（Feature transformation）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-scikit-learn-的主成分分析（PCA）"><span class="nav-number">4.</span> <span class="nav-text">使用 scikit-learn 的主成分分析（PCA）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rlchen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

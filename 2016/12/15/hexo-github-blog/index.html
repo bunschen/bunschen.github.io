@@ -1,0 +1,733 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="hexo,github," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="最近又想起来搭建博客，因为在学习过程中总是不断地接触新的知识，同时自己的记忆力感觉很差，学了新的忘了旧的，最后看完书后，还记得的已经是寥寥无几了。好记性不如烂笔头，这句话还是很正确的，所以希望在博客中记录自己所学的东西，不管是巩固知识还是供以后查阅都是一件很好的事，同时也可能会记录一些生活中的点滴，作为纪念吧。在搭建博客中，虽然并不难， 但是踩了一些坑，所以记录下来：">
+<meta name="keywords" content="hexo,github">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hexo + github 博客搭建">
+<meta property="og:url" content="http://yoursite.com/2016/12/15/hexo-github-blog/index.html">
+<meta property="og:site_name" content="RlChen's Blog">
+<meta property="og:description" content="最近又想起来搭建博客，因为在学习过程中总是不断地接触新的知识，同时自己的记忆力感觉很差，学了新的忘了旧的，最后看完书后，还记得的已经是寥寥无几了。好记性不如烂笔头，这句话还是很正确的，所以希望在博客中记录自己所学的东西，不管是巩固知识还是供以后查阅都是一件很好的事，同时也可能会记录一些生活中的点滴，作为纪念吧。在搭建博客中，虽然并不难， 但是踩了一些坑，所以记录下来：">
+<meta property="og:image" content="http://yoursite.com/images/blog1_1.png">
+<meta property="og:image" content="http://yoursite.com/images/blog1_2.png">
+<meta property="og:image" content="http://yoursite.com/images/blog1_3.png">
+<meta property="og:image" content="http://yoursite.com/images/blog1_4.png">
+<meta property="og:updated_time" content="2016-12-15T08:53:07.079Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hexo + github 博客搭建">
+<meta name="twitter:description" content="最近又想起来搭建博客，因为在学习过程中总是不断地接触新的知识，同时自己的记忆力感觉很差，学了新的忘了旧的，最后看完书后，还记得的已经是寥寥无几了。好记性不如烂笔头，这句话还是很正确的，所以希望在博客中记录自己所学的东西，不管是巩固知识还是供以后查阅都是一件很好的事，同时也可能会记录一些生活中的点滴，作为纪念吧。在搭建博客中，虽然并不难， 但是踩了一些坑，所以记录下来：">
+<meta name="twitter:image" content="http://yoursite.com/images/blog1_1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/15/hexo-github-blog/"/>
+
+
+
+
+
+  <title> hexo + github 博客搭建 | RlChen's Blog </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">RlChen's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/15/hexo-github-blog/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="rlchen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="RlChen's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="RlChen's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                hexo + github 博客搭建
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-15T10:16:05+08:00">
+                2016-12-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hexo/" itemprop="url" rel="index">
+                    <span itemprop="name">hexo</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近又想起来搭建博客，因为在学习过程中总是不断地接触新的知识，同时自己的记忆力感觉很差，学了新的忘了旧的，最后看完书后，还记得的已经是寥寥无几了。好记性不如烂笔头，这句话还是很正确的，所以希望在博客中记录自己所学的东西，不管是巩固知识还是供以后查阅都是一件很好的事，同时也可能会记录一些生活中的点滴，作为纪念吧。在搭建博客中，虽然并不难， 但是踩了一些坑，所以记录下来：</p>
+<a id="more"></a>
+<hr>
+<h3 id="安装-git"><a href="#安装-git" class="headerlink" title="安装 git"></a>安装 git</h3><p>下载 <a href="https://git-for-windows.github.io/" target="_blank" rel="external">git</a> 并执行即可完成安装。</p>
+<hr>
+<h3 id="安装-Node-js"><a href="#安装-Node-js" class="headerlink" title="安装 Node.js"></a>安装 Node.js</h3><p>在windows中直接下载<a href="https://nodejs.org/en/" target="_blank" rel="external">node.js</a>并安装就可以了</p>
+<hr>
+<h3 id="安装-hexo"><a href="#安装-hexo" class="headerlink" title="安装 hexo"></a>安装 hexo</h3><p>利用npm即可安装，在任意位置点击鼠标右键，选择Git bash, 输入下面命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install -g hexo</div></pre></td></tr></table></figure></p>
+<hr>
+<h3 id="创建hexo文件夹"><a href="#创建hexo文件夹" class="headerlink" title="创建hexo文件夹"></a>创建hexo文件夹</h3><p>在任意位置创建一个自定义的文件夹， 如 E:Hexo，在该文件夹里， 右键选择 Git bash， 输入下面命令， Hexo 即会自动下载建站所需文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo init</div></pre></td></tr></table></figure></p>
+<hr>
+<h3 id="安装依赖包"><a href="#安装依赖包" class="headerlink" title="安装依赖包"></a>安装依赖包</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="本地查看"><a href="#本地查看" class="headerlink" title="本地查看"></a>本地查看</h3><p>现在博客已经基本搭建完成，可以在本地进行查看，在博客根目录下如 E:Hexo下右键 Git bash 之子那个下面命令， 然后在浏览器中输入localhost:4000查看。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hexo generate</div><div class="line">hexo server</div></pre></td></tr></table></figure></p>
+<p><img src="/images/blog1_1.png" width="70%" height="70%" align="center"></p>
+<hr>
+<h3 id="github-创建博客"><a href="#github-创建博客" class="headerlink" title="github 创建博客"></a>github 创建博客</h3><ul>
+<li><p>注册账号<br>地址：<a href="https://github.com/" target="_blank" rel="external">github.com</a><br>输入账号、邮箱、密码,然后点击注册按钮.</p>
+</li>
+<li><p>创建页面仓库<br>这个仓库的名字需要和你的账号对应，格式: <a href="https://yourname.github.io" target="_blank" rel="external">https://yourname.github.io</a><br>输入基本信息，然后点击创建仓库.</p>
+</li>
+</ul>
+<p><img src="/images/blog1_2.png" width="70%" height="70%" align="center"></p>
+<p><strong>注意:</strong></p>
+<blockquote>
+<p>命名规则：你的 <strong>github账号.github.io</strong>，我这里被坑了, 直接写的github.io，结果deploy到github 中一直是404，弄了好久才发现~😭</p>
+</blockquote>
+<hr>
+<h3 id="生成SSH密钥"><a href="#生成SSH密钥" class="headerlink" title="生成SSH密钥"></a>生成SSH密钥</h3><p>在 git bush 中输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh-keygen</div></pre></td></tr></table></figure></p>
+<p>敲三次回车，既可以生成 <em>id_rsa.pub</em> 文件，这里面就是SSH key的内容,该文件在 C:\Users\Chen.ssh 目录下，其中Chen是你电脑用户名，用记事本打开，然后使拷贝里面的内容</p>
+<p>打开你的github,点击Setting</p>
+<p><img src="/images/blog1_3.png" width="70%" height="70%" align="center"></p>
+<p>点击左边SSH keys</p>
+<p>点击右边Add SSH</p>
+<p>然后把复制的内容粘贴到下面那个框里面，title随便自己写。</p>
+<p>过程可能会让你输入一次密码，输入即可！<br>配置好就行了</p>
+<p>判断SSH是否配置好：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh -T git@github.com</div></pre></td></tr></table></figure></p>
+<p>出现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Hi CoderTian! You&apos;ve successfully authenticated, but GitHub does not provide shell access.</div></pre></td></tr></table></figure></p>
+<p>就表示配置好了！</p>
+<hr>
+<h3 id="SSH配置好了，下面配置你的本地Hexo"><a href="#SSH配置好了，下面配置你的本地Hexo" class="headerlink" title="SSH配置好了，下面配置你的本地Hexo"></a>SSH配置好了，下面配置你的本地Hexo</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># Deployment</div><div class="line">## Docs: http://hexo.io/docs/deployment.html</div><div class="line">deploy:</div><div class="line">  type: git</div><div class="line">  repository: https://github.com/bunschen/bunschen.github.io.git</div><div class="line">  branch: master</div></pre></td></tr></table></figure>
+<p>保存，cd到Hexo的根目录</p>
+<p>依次执行下面的命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">hexo clean</div><div class="line">hexo g</div><div class="line">hexo d</div></pre></td></tr></table></figure></p>
+<p>如果出现下图既证明已经没有出现问题:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Branch master set up to track remote branch master from https://github.com/bunschen/bunschen.github.io.git.</div><div class="line">To https://github.com/bunschen/bunschen.github.io.git</div><div class="line">   ec1a247..6845039  HEAD -&gt; master</div><div class="line">INFO  Deploy done: git</div></pre></td></tr></table></figure></p>
+<p>第一次上传可能会让你输入git的用户名和密码</p>
+<p>如果成功的话在浏览器输入(<a href="https://bunschen.github.io" target="_blank" rel="external">https://bunschen.github.io</a>) 就可以访问你的博客了。把用户名换为你自己的。</p>
+<p>如果发布的时候出现错误：</p>
+<font color="#0099ff"> ERROR Deployer not found: git </font> 
+
+<p>意思就是用来发布文章的git没有安装，执行命令 :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-deployer-git --save</div></pre></td></tr></table></figure></p>
+<p>就可以解决了</p>
+<p>好了，到这里为止，你已经完成了自己博客的创建了!</p>
+<hr>
+<h3 id="博客优化"><a href="#博客优化" class="headerlink" title="博客优化"></a>博客优化</h3><p>1.利用MathJax来渲染LaTeX数学公式</p>
+<p>安装一个自动部署MathJax的hexo插件，安装方式如下 ：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">npm install hexo-math --save</div><div class="line">hexo math install</div></pre></td></tr></table></figure></p>
+<p>2.Hexo框架下给博客插入本地图片</p>
+<p>要加入图片，应该在source下建立一个与博文_posts同级别的文件夹 images,将图片放入。路片路径形如: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/hexo/source/images/myImg.png</div></pre></td></tr></table></figure>
+<p>在博客中插入，要使用相对路径，应写为 :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/images/myImg.png</div></pre></td></tr></table></figure></p>
+<p>markdown的图片插入方法：HTML</p>
+<p>使用嵌入HTML来插入图片，可以更好地控制图片的显示方式。</p>
+<p><img src="/images/blog1_4.png" width="70%" height="70%" align="center"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hexo/" rel="tag"># hexo</a>
+          
+            <a href="/tags/github/" rel="tag"># github</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/16/[machine lerning]-数据预处理1/" rel="next" title="建立好的训练集——数据预处理（一）">
+                <i class="fa fa-chevron-left"></i> 建立好的训练集——数据预处理（一）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/07/machine learning(一) 一 感知机模型/" rel="prev" title="machine learning 一 感知机模型">
+                machine learning 一 感知机模型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="rlchen" />
+          <p class="site-author-name" itemprop="name">rlchen</p>
+          <p class="site-description motion-element" itemprop="description">Stay hungry,Stay foolish.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-git"><span class="nav-number">1.</span> <span class="nav-text">安装 git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-Node-js"><span class="nav-number">2.</span> <span class="nav-text">安装 Node.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-hexo"><span class="nav-number">3.</span> <span class="nav-text">安装 hexo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建hexo文件夹"><span class="nav-number">4.</span> <span class="nav-text">创建hexo文件夹</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装依赖包"><span class="nav-number">5.</span> <span class="nav-text">安装依赖包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地查看"><span class="nav-number">6.</span> <span class="nav-text">本地查看</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#github-创建博客"><span class="nav-number">7.</span> <span class="nav-text">github 创建博客</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成SSH密钥"><span class="nav-number">8.</span> <span class="nav-text">生成SSH密钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH配置好了，下面配置你的本地Hexo"><span class="nav-number">9.</span> <span class="nav-text">SSH配置好了，下面配置你的本地Hexo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#博客优化"><span class="nav-number">10.</span> <span class="nav-text">博客优化</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rlchen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

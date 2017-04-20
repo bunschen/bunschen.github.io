@@ -1,0 +1,710 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="machine learning,perceptron,python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="感知机学习算法的基本原理:感知机模型由Rosenblatt提出， 该模型是模仿单个神经元在大脑中的工作：通过激活神经元。">
+<meta name="keywords" content="machine learning,perceptron,python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="machine learning 一 感知机模型">
+<meta property="og:url" content="http://yoursite.com/2016/12/07/machine learning(一) 一 感知机模型/index.html">
+<meta property="og:site_name" content="RlChen's Blog">
+<meta property="og:description" content="感知机学习算法的基本原理:感知机模型由Rosenblatt提出， 该模型是模仿单个神经元在大脑中的工作：通过激活神经元。">
+<meta property="og:image" content="http://img.blog.csdn.net/20161210144645559?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2hlbnJ1bG9uZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20161210154429530?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2hlbnJ1bG9uZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20161210154513077?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2hlbnJ1bG9uZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2016-12-15T08:12:26.862Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="machine learning 一 感知机模型">
+<meta name="twitter:description" content="感知机学习算法的基本原理:感知机模型由Rosenblatt提出， 该模型是模仿单个神经元在大脑中的工作：通过激活神经元。">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20161210144645559?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2hlbnJ1bG9uZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/07/machine learning(一) 一 感知机模型/"/>
+
+
+
+
+
+  <title> machine learning 一 感知机模型 | RlChen's Blog </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">RlChen's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/07/machine learning(一) 一 感知机模型/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="rlchen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="RlChen's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="RlChen's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                machine learning 一 感知机模型
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-07T11:25:38+08:00">
+                2016-12-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/machine-learning/" itemprop="url" rel="index">
+                    <span itemprop="name">machine learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="感知机学习算法的基本原理"><a href="#感知机学习算法的基本原理" class="headerlink" title="感知机学习算法的基本原理:"></a>感知机学习算法的基本原理:</h2><p>感知机模型由Rosenblatt提出， 该模型是模仿单个神经元在大脑中的工作：通过激活神经元。<br><img src="http://img.blog.csdn.net/20161210144645559?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2hlbnJ1bG9uZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<a id="more"></a>
+<p>因此最初的感知机工作原理十分简单，主要步骤如下： </p>
+<ul>
+<li><strong>初始化权重（weight）为0，或者其他随机的很的小值 </strong> </li>
+<li><p><strong>对于每一个训练样本 $x^{(i)}$ 执行下列操作</strong> </p>
+<ol>
+<li><p><strong>计算输出的目标值 $\hat y $</strong> </p>
+</li>
+<li><p><strong>更新权重（weight）</strong></p>
+</li>
+</ol>
+</li>
+</ul>
+<p>这里， 输出的目标值就是预测的所属的类，同时我们在预测中，要同时更新每一个在权重向量<strong>w</strong>中的具体权重（weight）$w_j$ ，也即：</p>
+<blockquote>
+<p>$w_j := w_j + \Delta w_j$</p>
+</blockquote>
+<p>对于用于更新权重 $w_j$ 值的 $\Delta w_j $ 通过感知机的学习规则计算：</p>
+<blockquote>
+<p>$\Delta w_j = \eta (y^{i} - \hat y^{(i)}) x_j^{(i)}$</p>
+</blockquote>
+<p>其中 $\eta $为学习率(一个常数， 取值一般为0.0~1.0)， $y^{(i)} $ 为第 i 个训练样本的真实标签， $\hat y^{(i)}$ 为相应的预测标签， $x_j^{(i)}$ 为第 i 个训练样本的第 j 个特征值。例如：</p>
+<blockquote>
+<p>$\Delta w_0 = \eta(y^{(i)} - output^{(i)})$</p>
+<p>$\Delta w_1 = \eta(y^{(i)} - output^{(i)})x_1^{(i)}$ </p>
+<p>$\Delta w_2 = \eta(y^{(i)} - output^{(i)})x_2^{(i)}$</p>
+</blockquote>
+<hr>
+<h2 id="感知机学习算法的实现"><a href="#感知机学习算法的实现" class="headerlink" title="感知机学习算法的实现:"></a>感知机学习算法的实现:</h2><p> <font color="orange" size="3">perceptron_classifier.py : </font><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding:utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Perceptron</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="string">"""</span></div><div class="line">    eta: float</div><div class="line">        学习率</div><div class="line">    n_inter: int</div><div class="line">        迭代次数</div><div class="line">    errors_: list</div><div class="line">        在每次迭代中，错误分类的的数量</div><div class="line">    w_: 1d-array</div><div class="line">        训练后的权重</div><div class="line">    """</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, eta=<span class="number">0.01</span>, n_iter=<span class="number">10</span>)</span>:</span></div><div class="line">        self.eta = eta</div><div class="line">        self.n_iter = n_iter</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fit</span><span class="params">(self, X, y)</span>:</span></div><div class="line">        self.w_ = np.zeros(<span class="number">1</span> + X.shape[<span class="number">1</span>])</div><div class="line">        self.errors_ = []</div><div class="line"></div><div class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> range(self.n_iter):</div><div class="line"></div><div class="line">            </div><div class="line">            errors = <span class="number">0</span></div><div class="line">            <span class="keyword">for</span> xi, target <span class="keyword">in</span> zip(X, y):</div><div class="line">                update = self.eta * (target - self.predict(xi))</div><div class="line">                self.w_[<span class="number">1</span>:] += update * xi</div><div class="line">                self.w_[<span class="number">0</span>] += update</div><div class="line">                errors += int(update != <span class="number">0.0</span>)</div><div class="line">            self.errors_.append(errors)</div><div class="line">        <span class="keyword">return</span> self</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">net_input</span><span class="params">(self, X)</span>:</span></div><div class="line">        <span class="keyword">return</span> np.dot(X, self.w_[<span class="number">1</span>:]) + self.w_[<span class="number">0</span>]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, X)</span>:</span></div><div class="line">        <span class="keyword">return</span> np.where(self.net_input(X) &gt;= <span class="number">0.0</span>, <span class="number">1</span>, <span class="number">-1</span>)</div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="感知机学习算法的测试"><a href="#感知机学习算法的测试" class="headerlink" title="感知机学习算法的测试:"></a>感知机学习算法的测试:</h2><p><font color="orange" size="3">iris_perceptron_classifier.py : </font><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> sys</div><div class="line">sys.path.append(<span class="string">'../'</span>)</div><div class="line"><span class="keyword">from</span> perceptron_classifier <span class="keyword">import</span> Perceptron</div><div class="line"></div><div class="line"><span class="comment"># 从网上下载鸢尾花的数据</span></div><div class="line">df = pd.read_csv(<span class="string">'https://archive.ics.uci.edu/ml/'</span></div><div class="line">                 <span class="string">'machine-learning-databases/iris/iris.data'</span>, header=<span class="keyword">None</span>)</div><div class="line"></div><div class="line"><span class="comment"># y 取前一百个数据中标签数据， 位于第 5 列中</span></div><div class="line">y = df.iloc[<span class="number">0</span>:<span class="number">100</span>, <span class="number">4</span>].values</div><div class="line"><span class="comment"># 将标签数据数值化， 若为Iris-setosa 品种， 则设为-1， 否则为1</span></div><div class="line">y = np.where(y == <span class="string">'Iris-setosa'</span>, <span class="number">-1</span>, <span class="number">1</span>)</div><div class="line"><span class="comment"># X 取前一百个样本数据，选取为第1和3个特征作为识别花品种的特征</span></div><div class="line">X = df.iloc[<span class="number">0</span>:<span class="number">100</span>, [<span class="number">0</span>, <span class="number">2</span>]].values</div><div class="line"></div><div class="line"><span class="comment"># 在坐标图中根据花朵的sepal length(萼片长度)，petal length（花瓣长度）来标出花朵</span></div><div class="line">plt.scatter(X[:<span class="number">50</span>, <span class="number">0</span>], X[:<span class="number">50</span>, <span class="number">1</span>], color=<span class="string">'red'</span>, marker=<span class="string">'o'</span>, label=<span class="string">'setosa'</span>)</div><div class="line">plt.scatter(X[<span class="number">50</span>:<span class="number">100</span>, <span class="number">0</span>], X[<span class="number">50</span>:<span class="number">100</span>, <span class="number">1</span>], color=<span class="string">'blue'</span>, marker=<span class="string">'x'</span>, label=<span class="string">'versicolor'</span>)</div><div class="line">plt.xlabel(<span class="string">'sepal length'</span>)</div><div class="line">plt.ylabel(<span class="string">'petal length'</span>)</div><div class="line">plt.legend(loc=<span class="string">'upper left'</span>)</div><div class="line">plt.show()</div><div class="line"></div><div class="line"><span class="comment"># 用感知机对训练样本进行训练</span></div><div class="line">ppn = Perceptron(eta=<span class="number">0.1</span>, n_iter=<span class="number">10</span>)</div><div class="line">ppn.fit(X, y)</div><div class="line"></div><div class="line"><span class="comment"># 画出在每次训练中，错误分类样本的个数</span></div><div class="line">plt.plot(range(<span class="number">1</span>, len(ppn.errors_) + <span class="number">1</span>), ppn.errors_, marker=<span class="string">'o'</span>)</div><div class="line">plt.xlabel(<span class="string">'Epochs'</span>)</div><div class="line">plt.ylabel(<span class="string">'Number of misclassification'</span>)</div><div class="line">plt.show()</div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="感知机学习算法的测试结果"><a href="#感知机学习算法的测试结果" class="headerlink" title="感知机学习算法的测试结果:"></a>感知机学习算法的测试结果:</h2><p><img src="http://img.blog.csdn.net/20161210154429530?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2hlbnJ1bG9uZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20161210154513077?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2hlbnJ1bG9uZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<hr>
+<h2 id="注释："><a href="#注释：" class="headerlink" title="注释："></a>注释：</h2><ol>
+<li><strong>zip(X, y) : </strong> 得到一个tuple对象， 其中每个子元素是一个元素对$(X^{(i)}, y^{(i)})$ 。</li>
+<li><code>sys.path.append(&#39;../&#39;)
+from perceptron_classifier import Perceptron</code><br>该代码片通过将当前文件的父路径临时添加为查找模块目录，来导入相应的python模块</li>
+</ol>
+<hr>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/machine-learning/" rel="tag"># machine learning</a>
+          
+            <a href="/tags/perceptron/" rel="tag"># perceptron</a>
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/15/hexo-github-blog/" rel="next" title="hexo + github 博客搭建">
+                <i class="fa fa-chevron-left"></i> hexo + github 博客搭建
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="rlchen" />
+          <p class="site-author-name" itemprop="name">rlchen</p>
+          <p class="site-description motion-element" itemprop="description">Stay hungry,Stay foolish.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#感知机学习算法的基本原理"><span class="nav-number">1.</span> <span class="nav-text">感知机学习算法的基本原理:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#感知机学习算法的实现"><span class="nav-number">2.</span> <span class="nav-text">感知机学习算法的实现:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#感知机学习算法的测试"><span class="nav-number">3.</span> <span class="nav-text">感知机学习算法的测试:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#感知机学习算法的测试结果"><span class="nav-number">4.</span> <span class="nav-text">感知机学习算法的测试结果:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注释："><span class="nav-number">5.</span> <span class="nav-text">注释：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rlchen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
